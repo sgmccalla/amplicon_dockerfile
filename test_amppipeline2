@@ -1,0 +1,84 @@
+############################################################
+# Based on Ubuntu
+############################################################
+FROM continuumio/miniconda3
+MAINTAINER Grace McCalla <smccalla@usgs.gov> 
+LABEL Description=Dockerfile to analyze amplicon data
+RUN apt-get update && apt-get install -y \
+	g++\
+ 	make \
+	git \
+	bwa \
+	samtools \
+	python-pip \
+	python-numpy \
+    build-essential\
+	libgsl0-dev\
+	default-jre \
+	zlib1g-dev \
+	sra-toolkit \
+	python-matplotlib \
+    unzip \
+    wget \
+	curl \
+	gcc \
+	python-dev \
+   && rm -rf /var/lib/apt/lists/*
+
+# disable SSL for anaconda due to DOI man in the middle
+RUN conda config --set ssl_verify false
+
+# install QIIME - the Anaconda version
+# see http://qiime.org/install/install.html for details
+RUN conda create -y -n qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c bioconda
+# change the matplotlib backend
+RUN sed -i.bak s/': Qt4Agg'/': agg'/g /opt/conda/envs/qiime1/lib/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc 
+
+# install biopython
+SHELL ["/bin/bash", "-c"] && RUN . activate qiime1 && conda install biopython
+
+RUN conda install biopython -y
+
+#Download & install fastq-join
+WORKDIR /root/
+RUN	cd ~ && \
+	wget "https://drive.google.com/uc?export=download&id=0B7KhouP0YeRAc2xackxzRnFrUEU" -O ea-utils.1.1.2-806.tar.gz && \
+	tar -xvf ea-utils.1.1.2-806.tar.gz && \
+	cd ea-utils.1.1.2-806 && \
+	make && \
+	cp -a fastq-mcf /usr/local/bin/ && \
+	cp -a fastq-join /usr/local/bin/ && \
+	cd ~ && \
+	rm -rf ea-utils.1.1.2-806 ea-utils.1.1.2-806.tar.gz
+  
+#Download & install BLAST
+RUN mkdir /opt/blast \
+    && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.6.0/ncbi-blast-2.6.0+-x64-linux.tar.gz \
+    | tar -zxC /opt/blast --strip-components=1
+
+# install Trimmomatic
+RUN wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip \
+    && unzip Trimmomatic-0.36.zip \
+    && chmod +x Trimmomatic-0.36 \
+    && mv Trimmomatic-0.36/trimmomatic-0.36.jar /usr/bin/
+
+# FIRST build libStatGen
+RUN git clone https://github.com/statgen/libStatGen /root/libStatGen
+RUN make -C /root/libStatGen
+ENV PATH "$PATH:/root/libStatGen"
+
+#Download FastQC
+RUN wget -c http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5.zip && \
+    unzip fastqc_v0.11.5.zip && \
+    chmod +x FastQC
+ENV PATH "$PATH:/usr/local/FastQC"
+
+# install fastQValidator
+RUN git clone https://github.com/statgen/fastQValidator.git /root/fastQValidator
+RUN make -C /root/fastQValidator
+ENV PATH "$PATH:/root/fastQValidator"
+
+# Assign Taxonomy
+ENV PATH "$PATH:/opt/conda/pkgs/qiime-1.9.1-py27_0/lib/python2.7/site-packages/qiime/assign_taxonomy.py"
+
+
