@@ -50,7 +50,9 @@ RUN	cd ~ && \
 	cp -a fastq-join /usr/local/bin/ && \
 	cd ~ && \
 	rm -rf ea-utils.1.1.2-806 ea-utils.1.1.2-806.tar.gz
-  
+ENV PATH "$PATH:/root/fastQValidator"
+ENV PATH "$PATH://usr/local/fastQValidator"
+    
 #Download & install BLAST
 RUN mkdir /opt/blast \
     && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.6.0/ncbi-blast-2.6.0+-x64-linux.tar.gz \
@@ -79,10 +81,9 @@ RUN make -C /root/fastQValidator
 ENV PATH "$PATH:/root/fastQValidator"
 
 # Assign Taxonomy
-RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST/blob/master/taxonomy_assignment_BLAST_V1.1.py /root/assign_taxonomy
-RUN make -C /root/assign_taxonomy
-ENV PATH "$PATH:/root/assign_taxonomy"
-ENV PATH "$PATH:/opt/conda/pkgs/qiime-1.9.1-py27_0/lib/python2.7/site-packages/qiime/assign_taxonomy.py"
+RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST/blob/master/taxonomy_assignment_BLAST_V1.1.py /root/taxonomy_assignment
+RUN make -C /root/taxonomy_assignment
+ENV PATH "$PATH:/root/taxonomy_assignment"
 
 
 
