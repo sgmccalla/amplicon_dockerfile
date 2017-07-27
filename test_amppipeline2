@@ -1,19 +1,19 @@
-############################################################
-# Based on Ubuntu
-############################################################
+#################################################################
+# Based on Debian GNU/Linux version 8 3.10.0-514.21.1.el7.x86_64
+#################################################################
 FROM continuumio/miniconda3
 MAINTAINER Grace McCalla <smccalla@usgs.gov> 
 LABEL Description="Dockerfile to analyze amplicon data"
 RUN apt-get update && apt-get install -y \
-	g++\
+	g++ \
  	make \
 	git \
 	bwa \
 	samtools \
 	python-pip \
 	python-numpy \
-    build-essential\
-	libgsl0-dev\
+    build-essential \
+	libgsl0-dev \
 	default-jre \
 	zlib1g-dev \
 	sra-toolkit \
@@ -25,21 +25,21 @@ RUN apt-get update && apt-get install -y \
 	python-dev \
    && rm -rf /var/lib/apt/lists/*
 
-# disable SSL for anaconda due to DOI man in the middle
+# Disable SSL for anaconda due to DOI man in the middle
 RUN conda config --set ssl_verify false
 
-# install QIIME - the Anaconda version
-# see http://qiime.org/install/install.html for details
+# Install QIIME - the Anaconda version
+# See http://qiime.org/install/install.html for details
 RUN conda create -y -n qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c bioconda
-# change the matplotlib backend
+# Change the matplotlib backend so Qiime plotting scripts will execute
 RUN sed -i.bak s/': Qt4Agg'/': agg'/g /opt/conda/envs/qiime1/lib/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc 
 
-# install biopython
+# Install biopython
 SHELL ["/bin/bash", "-c"] && RUN . activate qiime1 && conda install biopython
 
 RUN conda install biopython -y
 
-#Download & install fastq-join
+# Download & install fastq-join
 WORKDIR /root/
 RUN	cd ~ && \
 	wget "https://drive.google.com/uc?export=download&id=0B7KhouP0YeRAc2xackxzRnFrUEU" -O ea-utils.1.1.2-806.tar.gz && \
@@ -53,38 +53,36 @@ RUN	cd ~ && \
 ENV PATH "$PATH:/root/fastQValidator"
 ENV PATH "$PATH://usr/local/fastQValidator"
     
-#Download & install BLAST
+# Download & install BLAST
 RUN mkdir /opt/blast \
     && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.6.0/ncbi-blast-2.6.0+-x64-linux.tar.gz \
     | tar -zxC /opt/blast --strip-components=1
 
-# install Trimmomatic
+# Download & install Trimmomatic
 RUN wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip \
     && unzip Trimmomatic-0.36.zip \
     && chmod +x Trimmomatic-0.36 \
     && mv Trimmomatic-0.36/trimmomatic-0.36.jar /usr/bin/
 
-# FIRST build libStatGen
+# Build libStatGen
 RUN git clone https://github.com/statgen/libStatGen /root/libStatGen
 RUN make -C /root/libStatGen
 ENV PATH "$PATH:/root/libStatGen"
 
-#Download FastQC
+# Download & install FastQC
 RUN wget -c http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5.zip && \
     unzip fastqc_v0.11.5.zip && \
     chmod +x FastQC
 ENV PATH "$PATH:/usr/local/FastQC"
 
-# install fastQValidator
+# Download & install fastQValidator
 RUN git clone https://github.com/statgen/fastQValidator.git /root/fastQValidator
 RUN make -C /root/fastQValidator
 ENV PATH "$PATH:/root/fastQValidator"
 
-# Assign Taxonomy
+# Download & install Assign Taxonomy
 RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /root/taxonomy_assignment
-RUN make -C /root/taxonomy_assignment
+#    unzip Assign-Taxonomy-with-BLAST-master.zip && \
+#    chmod +x taxonomy_assignment
 ENV PATH "$PATH:/root/taxonomy_assignment"
-
-
-
 
