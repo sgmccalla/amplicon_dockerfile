@@ -81,7 +81,7 @@ RUN make -C /root/fastQValidator
 ENV PATH "$PATH:/root/fastQValidator"
 
 # Assign Taxonomy
-RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /home/smccalla/taxonomy_assignment /root/taxonomy_assignment
+RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /root/taxonomy_assignment
 RUN make -C /root/taxonomy_assignment
 ENV PATH "$PATH:/root/taxonomy_assignment"
 
