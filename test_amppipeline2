@@ -53,19 +53,23 @@ RUN	cd ~ && \
 	cp -a fastq-join /usr/local/bin/ && \
 	cd ~ && \
 	rm -rf ea-utils.1.1.2-806 ea-utils.1.1.2-806.tar.gz
-ENV PATH "$PATH:/root/fastQValidator"
-ENV PATH "$PATH://usr/local/fastQValidator"
-    
+ENV PATH "$PATH:/usr/local/bin/fastQValidator"
+ENV PATH /usr/local/bin/fastQValidator:$PATH
+
 # Download & install BLAST
 RUN mkdir /opt/blast \
     && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.6.0/ncbi-blast-2.6.0+-x64-linux.tar.gz \
     | tar -zxC /opt/blast --strip-components=1
+ENV PATH "$PATH:/opt/blast"
+ENV PATH /opt/blast:$PATH
 
 # Download & install Trimmomatic
 RUN wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip \
     && unzip Trimmomatic-0.36.zip \
     && chmod +x Trimmomatic-0.36 \
-    && mv Trimmomatic-0.36/trimmomatic-0.36.jar /usr/bin/
+    && mv Trimmomatic-0.36/trimmomatic-0.36.jar /usr/local/bin/
+ENV PATH "$PATH:/usr/local/bin/Trimmomatic-0.36"
+ENV PATH /usr/local/bin:$PATH
 
 # Build libStatGen
 RUN git clone https://github.com/statgen/libStatGen /root/libStatGen
@@ -75,17 +79,21 @@ ENV PATH "$PATH:/root/libStatGen"
 # Download & install FastQC
 RUN wget -c http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5.zip && \
     unzip fastqc_v0.11.5.zip && \
-    chmod +x FastQC
-ENV PATH "$PATH:/usr/local/FastQC"
+    chmod +x fastqc_v0.11.5 && \
+    && mv fastqc_v0.11.5.zip /usr/local/bin/
+ENV PATH "$PATH:/usr/local/bin/FastQC"
+ENV PATH /usr/local/bin/FastQC:$PATH
 
 # Download & install fastQValidator
-RUN git clone https://github.com/statgen/fastQValidator.git /root/fastQValidator
-RUN make -C /root/fastQValidator
-ENV PATH "$PATH:/root/fastQValidator"
+RUN git clone https://github.com/statgen/fastQValidator.git /usr/local/bin/fastQValidator
+RUN make -C /usr/local/bin/fastQValidator
+ENV PATH "$PATH:/usr/local/bin/fastQValidator"
+ENV PATH /usr/local/bin/fastQValidator:$PATH
 
 # Download & install Assign Taxonomy
-RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /root/taxonomy_assignment
+RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /usr/local/bin/ \
 #    unzip Assign-Taxonomy-with-BLAST-master.zip && \
-#    chmod +x taxonomy_assignment
-ENV PATH "$PATH:/root/taxonomy_assignment"
+    && chmod +x taxonomy_assignment
+ENV PATH "$PATH:/usr/local/bin/taxonomy_assignment"
+ENV PATH /usr/local/bin/taxonomy_assignment:$PATH
 
