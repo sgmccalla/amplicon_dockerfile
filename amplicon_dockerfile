@@ -40,7 +40,7 @@ RUN pip install biopython
 RUN conda install biopython -y
 
 RUN conda config --add channels conda-forge
-RUN conda install backports.shutil_get_terminal_size
+#RUN conda install backports.shutil_get_terminal_size
 
 # Download & install fastq-join
 WORKDIR /root/
