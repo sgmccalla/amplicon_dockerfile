@@ -100,10 +100,12 @@ RUN make -C /usr/local/bin/fastQValidator
 ENV PATH "$PATH:/usr/local/bin/fastQValidator"
 ENV PATH /usr/local/bin/fastQValidator:$PATH
 
+WORKDIR /usr/local/bin/
+
 # Download & install Assign Taxonomy
-RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST /usr/local/bin/ \
-#    unzip Assign-Taxonomy-with-BLAST-master.zip && \
-RUN chmod +x /usr/local/bin/taxonomy_assignment
+RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST /usr/local/bin/ && \
+    unzip Assign-Taxonomy-with-BLAST-master.zip && \
+    chmod +x /usr/local/bin/taxonomy_assignment
 ENV PATH "$PATH:/usr/local/bin/taxonomy_assignment"
 ENV PATH /usr/local/bin/taxonomy_assignment:$PATH
 
