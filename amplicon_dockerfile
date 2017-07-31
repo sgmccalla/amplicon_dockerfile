@@ -103,7 +103,7 @@ ENV PATH /usr/local/bin/fastQValidator:$PATH
 # Download & install Assign Taxonomy
 RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST.git /usr/local/bin/ \
 #    unzip Assign-Taxonomy-with-BLAST-master.zip && \
-    && chmod +x taxonomy_assignment
+RUN chmod +x /usr/local/bin/taxonomy_assignment
 ENV PATH "$PATH:/usr/local/bin/taxonomy_assignment"
 ENV PATH /usr/local/bin/taxonomy_assignment:$PATH
 
