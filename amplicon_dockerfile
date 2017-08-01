@@ -37,7 +37,7 @@ RUN sed -i.bak s/': Qt4Agg'/': agg'/g /opt/conda/envs/qiime1/lib/python2.7/site-
 # Install biopython
 SHELL ["/bin/bash", "-c"] && RUN . activate qiime1 && conda install biopython
 RUN conda install -q -y biopython
-SHELL pip install biopython
+RUN pip install biopython
 RUN conda install biopython -y
 
 RUN conda config --add channels conda-forge
