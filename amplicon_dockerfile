@@ -29,6 +29,15 @@ RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y \
 # Disable SSL for anaconda due to DOI man in the middle
 RUN conda config --set ssl_verify false
 
+# Install QIIME - the Anaconda version
+# See http://qiime.org/install/install.html for details
+RUN conda create -y -n qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c bioconda
+# Change the matplotlib backend so Qiime plotting scripts will execute
+RUN sed -i.bak s/': Qt4Agg'/': agg'/g /opt/conda/envs/qiime1/lib/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc
+
+RUN conda config --add channels conda-forge
+RUN conda install backports.shutil_get_terminal_size
+
 # Install biopython
 ENV PYTHON_PATH /biopython
 SHELL ["/bin/bash", "-c"]
@@ -43,15 +52,6 @@ RUN pip install bioseq
 RUN pip2 install biopython
 RUN pip3 install biopython
 RUN conda install -y biopython==1.66
-
-# Install QIIME - the Anaconda version
-# See http://qiime.org/install/install.html for details
-RUN conda create -y -n qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c bioconda
-# Change the matplotlib backend so Qiime plotting scripts will execute
-RUN sed -i.bak s/': Qt4Agg'/': agg'/g /opt/conda/envs/qiime1/lib/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc
-
-RUN conda config --add channels conda-forge
-RUN conda install backports.shutil_get_terminal_size
 
 # Download & install fastq-join
 WORKDIR /root/
