@@ -91,7 +91,6 @@ ENV PATH /usr/local/bin/libStatGen:$PATH
 # Download & install FastQC
 # https://hub.docker.com/r/genomicpariscentre/fastqc/~/dockerfile/
 # https://hub.docker.com/r/biocontainers/fastqc/~/dockerfile/
-# this is used as a placeholder so the file name doesn't need to be changed everywhere
 ENV DST=/tmp
 ENV URL=http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 ENV ZIP=fastqc_v0.11.5.zip
@@ -106,7 +105,8 @@ ENV PATH /usr/local/bin/FastQC:$PATH
 
 # Download & install fastQValidator
 RUN git clone https://github.com/statgen/fastQValidator.git /usr/local/bin/fastQValidator
-RUN make -C /usr/local/bin/fastQValidator
+RUN make -C /usr/local/bin/fastQValidator && \
+    chmod +x -R /usr/local/bin/
 ENV PATH "$PATH:/usr/local/bin/fastQValidator"
 ENV PATH /usr/local/bin/fastQValidator:$PATH
 

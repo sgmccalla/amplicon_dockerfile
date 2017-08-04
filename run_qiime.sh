@@ -10,13 +10,15 @@ source activate qiime1
 # http://fmgdata.kinja.com/using-docker-with-conda-environments-1790901398
 /bin/bash -c "source activate qiime1"
 
-PYTHON_PATH=~/bin/python-2.6.1/bin/python
+PYTHON_PATH=/opt/conda/bin/python
+
+/usr/bin/easy_install virtualenv
 
 if [ $# = 1 ]
 then
     ENV_NAME="$1"
-    virtualenv -p $PYTHON_PATH --no-site-packages $ENV_NAME
-    activate="`pwd`/$ENV_NAME/bin/activate"
+    virtualenv -p $PYTHON_PATH $ENV_NAME
+    activate="/opt/conda/envs/qiime1/bin/activate"
 
     if [ ! -f "$activate" ]
     then
@@ -26,5 +28,5 @@ then
 
     source "$activate"
 else
-    echo 'Usage: djangoenv ENV_NAME'
+    echo 'Usage: nuthatch ENV_NAME'
 fi
