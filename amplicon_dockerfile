@@ -46,7 +46,7 @@ WORKDIR /biopython
 RUN source activate qiime1
 RUN conda install -q -y biopython
 RUN conda install --yes python=2.7 biopython 
-RUN conda install --yes python=3.5 biopython 
+#RUN conda install --yes python=3.5 biopython 
 RUN pip install bioseq
 RUN pip2 install biopython
 RUN pip3 install biopython
