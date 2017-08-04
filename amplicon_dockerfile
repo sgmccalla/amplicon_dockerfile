@@ -4,26 +4,23 @@
 FROM continuumio/miniconda3
 MAINTAINER Grace McCalla <smccalla@usgs.gov> 
 LABEL Description="Dockerfile to analyze amplicon data"
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y \
     g++ \
     make \ 
     git \
     bwa \
     samtools \
-	python2-pip \
 	python3-pip \
 	python-numpy \    
     build-essential \
     default-jre \
 	zlib1g-dev \
 	sra-toolkit \
-	python2-matplotlib \
 	python3-matplotlib \
     unzip \
 	wget \
 	curl \
     gcc \
-	python2-dev \	
 	python3-dev \   
 	libgsl0-dev \
     python-biopython \
