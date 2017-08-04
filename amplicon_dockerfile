@@ -77,7 +77,7 @@ ENV PATH="/opt/blast/bin:${PATH}"
 # Download & install Trimmomatic
 RUN wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip \
     && unzip Trimmomatic-0.36.zip \
-    && chmod +x Trimmomatic-0.36 \
+    && chmod -R +x Trimmomatic-0.36 \
     && mv Trimmomatic-0.36/trimmomatic-0.36.jar /usr/local/bin/
 ENV PATH "$PATH:/usr/local/bin/Trimmomatic-0.36"
 ENV PATH /usr/local/bin/Trimmomatic-0.36:$PATH
@@ -112,6 +112,13 @@ ENV PATH /usr/local/bin/fastQValidator:$PATH
 
 # Download & install Assign Taxonomy
 RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST /usr/local/bin/taxonomy_assignment && \
-    chmod +x /usr/local/bin/taxonomy_assignment
+    chmod +x -R /usr/local/bin/taxonomy_assignment
 ENV PATH "$PATH:/usr/local/bin/taxonomy_assignment"
 ENV PATH /usr/local/bin/taxonomy_assignment:$PATH
+
+# Activate Qiime1
+RUN git clone https://github.com/sgmccalla/amplicon_dockerfile /usr/local/bin/run_qiime && \
+    chmod +x -R /usr/local/bin/run_qiime
+ENV PATH "$PATH:/usr/local/run_qiime"
+ENV PATH /usr/local/bin/run_qiime:$PATH
+RUN /usr/local/bin/run_qiime/run_qiime.sh
