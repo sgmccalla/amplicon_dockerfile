@@ -4,7 +4,7 @@
 FROM continuumio/miniconda3
 MAINTAINER Grace McCalla <smccalla@usgs.gov> 
 LABEL Description="Dockerfile to analyze amplicon data"
-RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y  --force-yes \
+RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y \
 
     build-essential \
 	wget \
@@ -25,6 +25,7 @@ RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y  --fo
 	python2-pip \
 	python3-pip \
 	python-numpy \
+    python-biopython \
     samtools \
 	sra-toolkit \
 	zlib1g-dev \
@@ -116,8 +117,8 @@ RUN python3.5 setup.py install
 RUN . activate qiime1
 RUN conda install -q -y biopython
 RUN conda install --yes python=2.7 biopython 
+RUN conda install --yes python=3.5 biopython 
 RUN pip install bioseq
-RUN pip install biopython
 RUN pip2 install biopython
+RUN pip3 install biopython
 RUN conda install -y biopython==1.66
-
