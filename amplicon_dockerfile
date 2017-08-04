@@ -4,25 +4,29 @@
 FROM continuumio/miniconda3
 MAINTAINER Grace McCalla <smccalla@usgs.gov> 
 LABEL Description="Dockerfile to analyze amplicon data"
-RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y && \
-	default-jre \
+RUN apt-get update && apt-get upgrade -y --force-yes && apt-get install -y  --force-yes \
+
     build-essential \
-	bwa \
+	wget \
+    gcc \
+    g++ \
+    unzip \
+    make \ 
+    git \
+    default-jre \
+    bwa \
     conda install -y biopython==1.66 && \
 	curl \
-	g++ \
-	gcc \ 	
-	git \
+	python2-dev \	
+	python3-dev \	
 	libgsl0-dev \
-    make \
-	python-matplotlib \
-	python-dev \
-	python-pip \
+	python2-matplotlib \
+	python3-matplotlib \
+	python2-pip \
+	python3-pip \
 	python-numpy \
     samtools \
 	sra-toolkit \
-    unzip \
-    wget \
 	zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
    
