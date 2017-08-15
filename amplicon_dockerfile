@@ -48,9 +48,10 @@ RUN conda install -q -y biopython
 RUN conda install --yes python=2.7 biopython 
 #RUN conda install --yes python=3.5 biopython 
 RUN pip install bioseq
-#RUN pip2 install biopython
-RUN pip3 install biopython
 RUN conda install -y biopython==1.66
+RUN easy_install pip
+RUN pip2 install biopython
+RUN pip3 install biopython
 
 # Install BLAST
 RUN conda install -c bioconda blast-legacy=2.2.22
