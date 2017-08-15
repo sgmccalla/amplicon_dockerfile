@@ -120,6 +120,12 @@ RUN git clone https://github.com/Joseph7e/Assign-Taxonomy-with-BLAST /usr/local/
 ENV PATH "$PATH:/usr/local/bin/taxonomy_assignment"
 ENV PATH /usr/local/bin/taxonomy_assignment/:$PATH
 
+# Download & install steps1-4 for analyzing amplicon data
+RUN git clone https://github.com/sgmccalla/amplicon_pipeline /usr/local/bin/amplicon_pipeline && \
+    chmod +x -R /usr/local/bin/amplicon_pipeline
+ENV PATH "$PATH:/usr/local/bin/amplicon_pipeline"
+ENV PATH /usr/local/bin/amplicon_pipeline/:$PATH
+
 # Activate Qiime1
 RUN git clone https://github.com/sgmccalla/amplicon_dockerfile /usr/local/bin/run_qiime && \
     chmod +x -R /usr/local/bin/run_qiime
